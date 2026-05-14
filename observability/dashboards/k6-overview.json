@@ -188,6 +188,186 @@
           "alias": "failed %"
         }
       ]
+    },
+    {
+      "id": 20,
+      "type": "timeseries",
+      "title": "HTTP Reqs by Status",
+      "datasource": { "type": "influxdb", "uid": "influxdb_k6" },
+      "fieldConfig": { "defaults": { "unit": "short" }, "overrides": [] },
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 20 },
+      "options": {
+        "legend": { "calcs": [], "displayMode": "list", "placement": "bottom", "showLegend": true },
+        "tooltip": { "mode": "single", "sort": "none" }
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": { "type": "influxdb", "uid": "influxdb_k6" },
+          "query": "SELECT sum(\"value\") FROM \"http_reqs\" WHERE $timeFilter GROUP BY time($__interval), \"status\" fill(0)",
+          "rawQuery": true,
+          "resultFormat": "time_series",
+          "alias": "status [[tag_status]]"
+        }
+      ]
+    },
+    {
+      "id": 21,
+      "type": "timeseries",
+      "title": "HTTP Reqs by Endpoint",
+      "datasource": { "type": "influxdb", "uid": "influxdb_k6" },
+      "fieldConfig": { "defaults": { "unit": "short" }, "overrides": [] },
+      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 20 },
+      "options": {
+        "legend": { "calcs": [], "displayMode": "list", "placement": "bottom", "showLegend": true },
+        "tooltip": { "mode": "single", "sort": "none" }
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": { "type": "influxdb", "uid": "influxdb_k6" },
+          "query": "SELECT sum(\"value\") FROM \"http_reqs\" WHERE $timeFilter GROUP BY time($__interval), \"name\" fill(0)",
+          "rawQuery": true,
+          "resultFormat": "time_series",
+          "alias": "[[tag_name]]"
+        }
+      ]
+    },
+    {
+      "id": 22,
+      "type": "timeseries",
+      "title": "Latency Breakdown p95",
+      "datasource": { "type": "influxdb", "uid": "influxdb_k6" },
+      "fieldConfig": { "defaults": { "unit": "ms" }, "overrides": [] },
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 28 },
+      "options": {
+        "legend": { "calcs": [], "displayMode": "list", "placement": "bottom", "showLegend": true },
+        "tooltip": { "mode": "single", "sort": "none" }
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": { "type": "influxdb", "uid": "influxdb_k6" },
+          "query": "SELECT percentile(\"value\",95) FROM \"http_req_waiting\" WHERE $timeFilter GROUP BY time($__interval) fill(null)",
+          "rawQuery": true,
+          "resultFormat": "time_series",
+          "alias": "waiting"
+        },
+        {
+          "refId": "B",
+          "datasource": { "type": "influxdb", "uid": "influxdb_k6" },
+          "query": "SELECT percentile(\"value\",95) FROM \"http_req_connecting\" WHERE $timeFilter GROUP BY time($__interval) fill(null)",
+          "rawQuery": true,
+          "resultFormat": "time_series",
+          "alias": "connecting"
+        },
+        {
+          "refId": "C",
+          "datasource": { "type": "influxdb", "uid": "influxdb_k6" },
+          "query": "SELECT percentile(\"value\",95) FROM \"http_req_tls_handshaking\" WHERE $timeFilter GROUP BY time($__interval) fill(null)",
+          "rawQuery": true,
+          "resultFormat": "time_series",
+          "alias": "tls"
+        },
+        {
+          "refId": "D",
+          "datasource": { "type": "influxdb", "uid": "influxdb_k6" },
+          "query": "SELECT percentile(\"value\",95) FROM \"http_req_sending\" WHERE $timeFilter GROUP BY time($__interval) fill(null)",
+          "rawQuery": true,
+          "resultFormat": "time_series",
+          "alias": "sending"
+        },
+        {
+          "refId": "E",
+          "datasource": { "type": "influxdb", "uid": "influxdb_k6" },
+          "query": "SELECT percentile(\"value\",95) FROM \"http_req_receiving\" WHERE $timeFilter GROUP BY time($__interval) fill(null)",
+          "rawQuery": true,
+          "resultFormat": "time_series",
+          "alias": "receiving"
+        }
+      ]
+    },
+    {
+      "id": 23,
+      "type": "timeseries",
+      "title": "p95 Latency by Endpoint",
+      "datasource": { "type": "influxdb", "uid": "influxdb_k6" },
+      "fieldConfig": { "defaults": { "unit": "ms" }, "overrides": [] },
+      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 28 },
+      "options": {
+        "legend": { "calcs": [], "displayMode": "list", "placement": "bottom", "showLegend": true },
+        "tooltip": { "mode": "single", "sort": "none" }
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": { "type": "influxdb", "uid": "influxdb_k6" },
+          "query": "SELECT percentile(\"value\",95) FROM \"http_req_duration\" WHERE $timeFilter GROUP BY time($__interval), \"name\" fill(null)",
+          "rawQuery": true,
+          "resultFormat": "time_series",
+          "alias": "[[tag_name]]"
+        }
+      ]
+    },
+    {
+      "id": 24,
+      "type": "timeseries",
+      "title": "Bandwidth In/Out",
+      "datasource": { "type": "influxdb", "uid": "influxdb_k6" },
+      "fieldConfig": { "defaults": { "unit": "bytes" }, "overrides": [] },
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 36 },
+      "options": {
+        "legend": { "calcs": [], "displayMode": "list", "placement": "bottom", "showLegend": true },
+        "tooltip": { "mode": "single", "sort": "none" }
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": { "type": "influxdb", "uid": "influxdb_k6" },
+          "query": "SELECT sum(\"value\") FROM \"data_received\" WHERE $timeFilter GROUP BY time($__interval) fill(0)",
+          "rawQuery": true,
+          "resultFormat": "time_series",
+          "alias": "received"
+        },
+        {
+          "refId": "B",
+          "datasource": { "type": "influxdb", "uid": "influxdb_k6" },
+          "query": "SELECT sum(\"value\") FROM \"data_sent\" WHERE $timeFilter GROUP BY time($__interval) fill(0)",
+          "rawQuery": true,
+          "resultFormat": "time_series",
+          "alias": "sent"
+        }
+      ]
+    },
+    {
+      "id": 25,
+      "type": "timeseries",
+      "title": "Iteration Performance",
+      "datasource": { "type": "influxdb", "uid": "influxdb_k6" },
+      "fieldConfig": { "defaults": { "unit": "ms" }, "overrides": [] },
+      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 36 },
+      "options": {
+        "legend": { "calcs": [], "displayMode": "list", "placement": "bottom", "showLegend": true },
+        "tooltip": { "mode": "single", "sort": "none" }
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": { "type": "influxdb", "uid": "influxdb_k6" },
+          "query": "SELECT percentile(\"value\",95) FROM \"iteration_duration\" WHERE $timeFilter GROUP BY time($__interval) fill(null)",
+          "rawQuery": true,
+          "resultFormat": "time_series",
+          "alias": "iteration p95"
+        },
+        {
+          "refId": "B",
+          "datasource": { "type": "influxdb", "uid": "influxdb_k6" },
+          "query": "SELECT sum(\"value\") FROM \"iterations\" WHERE $timeFilter GROUP BY time($__interval) fill(0)",
+          "rawQuery": true,
+          "resultFormat": "time_series",
+          "alias": "iterations"
+        }
+      ]
     }
   ],
   "refresh": "5s",

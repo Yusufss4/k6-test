@@ -6,5 +6,6 @@ k6 run scripts/04-checks-threshold-fail.js
 echo $?
 docker compose -f observability/docker-compose.yml up -d
 k6 run --out influxdb=http://localhost:8086/k6 scripts/02-load-stages.js
+http://localhost:3000/login
 docker compose -f observability/docker-compose.yml down
 k6 run scripts/05-complex-feature-showcase.js
