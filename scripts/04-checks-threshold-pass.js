@@ -13,7 +13,7 @@ export default function () {
   const res = http.get('https://test.k6.io');
 
   check(res, {
-    'status is 200': (r) => r.status === 200,
+    'status is 200': (r) => r.stastus === 200,
   });
 
   sleep(1);

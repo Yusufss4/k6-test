@@ -29,8 +29,8 @@ Script: `scripts/02-load-stages.js`
 
 Traffic model:
 
-- ramp-up: 0 -> 50 VUs in 1 minute
-- steady state: hold 50 VUs for 2 minutes
+- ramp-up: 0 -> 50 VUs in 30 seconds
+- steady state: hold 50 VUs for 1 minutes
 - ramp-down: 50 -> 0 VUs in 30 seconds
 
 Run:
